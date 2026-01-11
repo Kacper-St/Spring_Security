@@ -1,8 +1,10 @@
 package com.secure.spring_security.service;
 
+import com.secure.spring_security.dtos.NoteResponseDTO;
 import com.secure.spring_security.model.Note;
 import com.secure.spring_security.repositories.NoteRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,14 +14,17 @@ import java.util.List;
 public class NoteServiceImpl implements NoteService {
 
     private final NoteRepository noteRepository;
+    private final ModelMapper modelMapper;
 
     @Override
-    public Note createNoteForUser(String username, String content) {
+    public NoteResponseDTO createNoteForUser(String username, String content) {
         Note note = new Note();
         note.setContent(content);
         note.setOwnerUsername(username);
+
         Note savedNote = noteRepository.save(note);
-        return savedNote;
+
+        return modelMapper.map(savedNote, NoteResponseDTO.class);
     }
 
     @Override
