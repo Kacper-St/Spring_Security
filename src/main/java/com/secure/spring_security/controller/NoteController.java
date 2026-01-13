@@ -1,5 +1,7 @@
 package com.secure.spring_security.controller;
 
+import com.secure.spring_security.dtos.NoteRequestDTO;
+import com.secure.spring_security.dtos.NoteResponseDTO;
 import com.secure.spring_security.model.Note;
 import com.secure.spring_security.service.NoteService;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +21,12 @@ public class NoteController {
     private final NoteService noteService;
 
     @PostMapping
-    public ResponseEntity<Note> createNote(@RequestBody String content,
-                                           @AuthenticationPrincipal UserDetails userDetails) {
-        String username =  userDetails.getUsername();
-        System.out.println("USER DETAILS: " + username);
-        Note note = noteService.createNoteForUser(username, content);
-        return new ResponseEntity<>(note, HttpStatus.CREATED);
+    public ResponseEntity<NoteResponseDTO> createNote(@RequestBody NoteRequestDTO request,
+                                                      @AuthenticationPrincipal UserDetails userDetails) {
+
+        NoteResponseDTO noteResponse = noteService.createNoteForUser(userDetails.getUsername(), request.getContent());
+
+        return new ResponseEntity<>(noteResponse, HttpStatus.CREATED);
     }
 
     @GetMapping
