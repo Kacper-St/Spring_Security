@@ -1,4 +1,4 @@
-package com.secure.spring_security.security.request;
+package com.secure.spring_security.security.response;
 
 import lombok.Getter;
 import lombok.Setter;
