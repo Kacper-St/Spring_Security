@@ -1,16 +1,24 @@
 package com.secure.spring_security.security.controller;
 
+import com.secure.spring_security.model.User;
 import com.secure.spring_security.security.request.LoginRequest;
 import com.secure.spring_security.security.request.SignupRequest;
 import com.secure.spring_security.security.response.LoginResponse;
 import com.secure.spring_security.security.response.MessageResponse;
+import com.secure.spring_security.security.response.UserInfoResponse;
 import com.secure.spring_security.security.service.AuthService;
+import com.secure.spring_security.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -37,5 +45,11 @@ public class AuthController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         }
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> getUserDetails(@AuthenticationPrincipal UserDetails userDetails) {
+        UserInfoResponse response = authService.getUserDetailsResponse(userDetails.getUsername());
+        return ResponseEntity.ok(response);
     }
 }
