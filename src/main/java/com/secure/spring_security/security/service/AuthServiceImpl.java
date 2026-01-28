@@ -9,7 +9,6 @@ import com.secure.spring_security.security.jwt.JwtUtils;
 import com.secure.spring_security.security.request.LoginRequest;
 import com.secure.spring_security.security.request.SignupRequest;
 import com.secure.spring_security.security.response.LoginResponse;
-import com.secure.spring_security.security.response.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -71,29 +70,6 @@ public class AuthServiceImpl implements AuthService {
         setUserAccountDefaults(user, role);
 
         userRepository.save(user);
-    }
-
-    public UserInfoResponse getUserDetailsResponse(String username) {
-        User user = userRepository.findByUserName(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        List<String> roles = user.getRole() != null ?
-                List.of(user.getRole().getRoleName().name()) :
-                List.of();
-
-        return new UserInfoResponse(
-                user.getUserId(),
-                user.getUserName(),
-                user.getEmail(),
-                user.isAccountNonLocked(),
-                user.isAccountNonExpired(),
-                user.isCredentialsNonExpired(),
-                user.isEnabled(),
-                user.getCredentialsExpiryDate(),
-                user.getAccountExpiryDate(),
-                user.isTwoFactorEnabled(),
-                roles
-        );
     }
 
     private Role determineRole(Set<String> strRoles) {
